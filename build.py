@@ -23,6 +23,20 @@ def build():
             f.write(html)
     if os.path.exists('assets'):
         shutil.copytree('assets', 'build/assets', dirs_exist_ok=True)
+    # Generate robots.txt
+    with open("build/robots.txt", "w") as f:
+        f.write("User-agent: *\nAllow: /\nSitemap: https://clearances-in-devon.co.uk/sitemap.xml\n")
+    # Generate sitemap.xml
+    urls = []
+    for page in pages:
+        slug = page["slug"]
+        loc = "https://clearances-in-devon.co.uk/" + (slug + "/" if slug else "")
+        urls.append(f"  <url><loc>{loc}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>")
+    sitemap = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
+    sitemap += "\n".join(urls)
+    sitemap += "\n</urlset>\n"
+    with open("build/sitemap.xml", "w") as f:
+        f.write(sitemap)
     print(f"Built {len(pages)} pages")
 
 if __name__ == '__main__':
