@@ -1,13 +1,14 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-05-26",
+  "last_updated": "2026-06-03",
   "project_metadata": {
     "name": "site_Dev",
     "domain": "https://clearances-in-devon.co.uk",
     "project_root": "/home/chubert/omni-builder/sites/site_Dev",
-    "tagline": "",
-    "email": "",
-    "phone": ""
+    "tagline": "Serving the Whole of Devon",
+    "email": "info@clearances-in-devon.co.uk",
+    "phone": "07867180703",
+    "contact_name": "Mark"
   },
   "architecture_contract": {
     "source_of_truth": "data/pages.json",
@@ -52,7 +53,11 @@
     "single_site_build_command": "cd /home/chubert/omni-builder && python3 -c \"from engine.build_sites import build_single_site; build_single_site('sites/site_Dev')\"",
     "serve_command": "cd /home/chubert/omni-builder/sites/site_Dev/build && python3 -m http.server 8000",
     "notes": "Engine does plain string replace only. base.html must use {{ content }} exclusively. All includes must be inlined into base.html. Never append serve command to build command.",
-    "engine_fix": "if __name__ == __main__ guard added to build_sites.py"
+    "engine_fix": "if __name__ == __main__ guard added to build_sites.py",
+    "build_py_confirmed": true,
+    "build_py_handles_assets": true,
+    "build_py_handles_homepage_slug": true,
+    "template_token_confirmed": "{{ content }} - verified in build.py"
   },
   "ai_governance": {
     "rules": [
@@ -158,12 +163,40 @@
     {
       "date": "2026-05-25",
       "change": "Pushed to GitHub: remote set to https://github.com/vswebsitedesign-ctrl/site_Dev.git. GitHub Actions will now build on push."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "Master Report updated from full fact-find: local filesystem, GitHub API, live server crawl. base.html token bug confirmed ({ content } not {{ content }}). build.py confirmed handling assets copy and homepage slug. Live site confirmed serving old Jekyll build - omni-builder not deployed. Nav, inline styles, schema, OG, canonical, cookie banner missing from base.html. All 3 live-referenced images confirmed present in assets/images/. 2 successful GitHub Actions build runs confirmed."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "Deployment rules adapted to this project: server IP 217.154.33.12, deploy user root, SSH key ~/.ssh/github_actions_bat, manual rsync deploy command recorded, send.php rules added, robots/sitemap generation rules added, thank-you page rule added, hard rules recorded."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "Safety practices adapted from site_tales-from-a-harrogate-caravan: AI_READ_THIS_FIRST block added, mandatory_session_workflow added, ai_rules hardened, critical_ai_guardrails added, ai_screwup_incident_log stub added, session workflow scripts flagged as required."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "Jekyll master report mined for confirmed still-relevant facts: contact name Mark, phone 07867180703, email info@clearances-in-devon.co.uk, hero image no-overlay rule, .htaccess rsync rule, thank-you slug confirmed, governing rule, stop protocol, error recovery rules, 9 ai_failure_log incidents, complexity decision guide, key lessons. Jekyll-specific rules excluded."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "Session workflow scripts created in project root: session_start.sh, snapshot.sh, restore.sh, session_end.sh."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "FIXED: base.html token corrected from { content } to {{ content }}. Build confirmed 31 pages successfully. Committed to session-20260603-110856."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "FIXED: robots.txt and sitemap.xml now generated from pages.json on every build. 31 URLs confirmed in sitemap. Committed to session-20260603-110856."
     }
   ],
   "known_issues": {
     "template_tags_in_base": "base.html may contain {% %} or {{ title }} tags the engine cannot process \u2014 use {{ content }} only",
     "includes_not_rendered": "engine has no include system \u2014 all global components must be inlined into base.html",
-    "assets_not_in_build": "assets/ directory is not copied to build/ automatically \u2014 serve from project root or copy manually",
+    "assets_not_in_build": "RESOLVED by build.py - shutil.copytree copies assets/ into build/assets/ automatically on every build",
     "port_clash": "always check port 8000 is free before serving \u2014 build only and refresh if server already running",
     "assets_build_sync": "assets/ must be re-copied into build/ after every build \u2014 cp -r assets/ build/assets/ from each site root",
     "body_content_full_html": "body_content must never contain full standalone HTML documents (no <!DOCTYPE>, <html>, <head>, <body> tags). Strip to <main> contents only. Full documents cause double header/footer when wrapped by base.html. Fix: re.search(r\"<main[^>]*>(.*?)</main>\", body, re.DOTALL)",
@@ -172,17 +205,30 @@
     "lfs_checkout": "pages.json tracked via Git LFS \u2014 workflow checkout must include lfs: true or build fails with empty JSON error.",
     "build_script": "build.py must exist in repo root \u2014 GitHub Actions runner calls python3 build.py directly.",
     "yaml_multiline": "Never embed multiline Python in deploy.yml \u2014 always use a separate build.py script to avoid YAML syntax errors.",
-    "homepage_slug": "Engine builds index slug as build/index/index.html \u2014 must be manually copied to build/index.html after every build: cp build/index/index.html build/index.html",
+    "homepage_slug": "RESOLVED by build.py - empty slug writes directly to build/index.html not build/index/index.html",
     "base_html_jekyll_tags": "base.html may contain Jekyll tags (site.baseurl, site.title, prepend filters, block/endblock) the engine cannot process \u2014 audit base.html before first build and replace all with plain values or {{ content }}",
     "missing_js_assets": "cookieconsent.umd.js and cookie-init.js may be referenced in base.html but not exist in assets/js/ \u2014 check and remove missing JS references from base.html",
-    "head_styles_in_jekyll": "Some Jekyll pages store CSS in <head> <style> blocks \u2014 extractor must pull <style> block from <head> AND prepend to body content. Affects pages using custom layouts without <main> tags."
+    "head_styles_in_jekyll": "Some Jekyll pages store CSS in <head> <style> blocks \u2014 extractor must pull <style> block from <head> AND prepend to body content. Affects pages using custom layouts without <main> tags.",
+    "base_html_content_token": "RESOLVED 2026-06-03 \u2014 { content } corrected to {{ content }} in theme/base.html. Build confirmed 31 pages.",
+    "live_site_no_main_tag": "Live Jekyll site has no <main> tag - body_content extraction must target page body content directly, not <main> contents",
+    "live_site_inline_styles": "Live site uses inline <style> in <head> and no external CSS files - base.html must include these styles to match live site",
+    "base_html_missing_live_components": "Current base.html is bare minimal template - missing nav, inline styles, schema/LD+JSON, canonical tags, OG tags, cookie banner - does not match live Jekyll site"
   },
   "assets": {
     "images_migrated": true,
     "images_path": "assets/images",
     "image_count": 4,
     "migration_date": "2026-05-25",
-    "source": "/home/chubert/Dev/assets/images"
+    "source": "/home/chubert/Dev/assets/images",
+    "images_confirmed": [
+      "Clearances-in-Devon.webp",
+      "Clearances-in-Devon-Before.webp",
+      "Clearances-in-Devon-After.webp",
+      "cropped-Clearances-in-Devon.webp"
+    ],
+    "live_site_images_present": true,
+    "hero_image": "/assets/images/Clearances-in-Devon.webp",
+    "hero_image_note": "Contains business name and phone number \u2014 NO text overlay on hero \u2014 ever"
   },
   "migration": {
     "status": "complete",
@@ -195,22 +241,241 @@
     "pages_built": "unknown \u2014 not yet audited",
     "base_html_status": "minimal template added",
     "assets_in_build": "unknown",
-    "last_build": "2026-05-25",
-    "build_result": "SUCCESS",
+    "last_build": "2026-06-03",
+    "build_result": "SUCCESS \u2014 31 pages",
     "live_crawl": "Crawled 2026-05-25: 30 added, 0 updated from https://clearances-in-devon.co.uk",
-    "all_sites_built": true
+    "all_sites_built": true,
+    "github_actions_last_run": "2026-05-26T05:08:10Z",
+    "github_actions_runs_confirmed": 2,
+    "live_site_status": "LIVE - serving old Jekyll build - omni-builder NOT deployed to live server",
+    "live_site_title": "Clearances in Devon | Serving the Whole of Devon",
+    "live_site_http_status": "200"
   },
   "deployment_workflow": {
     "workflow_status": "not set up",
     "github_secret": "SSH_PRIVATE_KEY (required when workflow is created)",
     "notes": "Deployment to Plesk not configured; artifact uploads build/",
-    "github_actions_status": "build-only workflow \u2013 ready, runs on push",
+    "github_actions_status": "build-only \u2014 no rsync step permitted in deploy.yml",
     "workflow_file": ".github/workflows/deploy.yml",
     "git_initialized": true,
     "git_remote": "https://github.com/vswebsitedesign-ctrl/site_Dev.git",
-    "server_ip": "NOT YET CONFIGURED",
-    "deploy_configured": false,
-    "deploy_status": "PENDING \u2014 no IP or deploy user set in workflow",
-    "recommended_method": "GitHub Actions + rsync over SSH as Plesk domain system user (not root) \u2014 see site_JKRS deploy.yml as reference implementation"
-  }
+    "server_ip": "217.154.33.12",
+    "deploy_configured": true,
+    "deploy_status": "MANUAL RSYNC \u2014 GitHub Actions build-only, rsync run manually from local machine",
+    "recommended_method": "Manual rsync over SSH using ~/.ssh/github_actions_bat as root to Plesk httpdocs",
+    "live_server_build": "OLD JEKYLL BUILD - omni-builder output never deployed to Plesk",
+    "deploy_user": "root",
+    "ssh_key": "~/.ssh/github_actions_bat",
+    "deploy_command": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" build/ root@217.154.33.12:/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/",
+    "send_php": {
+      "location": "project root \u2014 not build/",
+      "rsync_command": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" send.php root@217.154.33.12:/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/",
+      "success_redirect": "header('Location: /thank-you/');",
+      "email": "info@clearances-in-devon.co.uk",
+      "post_fields": "must exactly match HTML form field names \u2014 confirm before deploying",
+      "htaccess_note": ".htaccess must be rsynced separately alongside send.php \u2014 lives in project root not build/",
+      "htaccess_rsync": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" .htaccess root@217.154.33.12:/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/"
+    },
+    "robots_and_sitemap": {
+      "rule": "Must be regenerated from pages.json on every build \u2014 never static files in repo",
+      "robots_txt": "User-agent: *, Allow: /, Sitemap: https://clearances-in-devon.co.uk/sitemap.xml",
+      "sitemap": "All slugs from pages.json, priority 0.7, changefreq monthly",
+      "status": "RESOLVED 2026-06-03 \u2014 generated from pages.json on every build via build.py. 31 URLs confirmed. robots.txt and sitemap.xml written to build/ automatically."
+    },
+    "thank_you_page": {
+      "rule": "Every site must have a thank-you slug in pages.json \u2014 if missing create and append",
+      "status": "CONFIRMED IN JEKYLL SOURCE \u2014 must verify exists in pages.json before deploy",
+      "slug": "thank-you"
+    },
+    "homepage_rule": "After every build check known_issues.homepage_slug \u2014 confirmed RESOLVED by build.py for this project",
+    "hard_rules": [
+      "Never guess paths \u2014 read Master Report first",
+      "Never use GitHub Actions to deploy to Plesk",
+      "Never leave send.php redirecting to /contact-us/",
+      "Never deploy without checking GitHub workflow first for rsync steps",
+      "If deploy.yml contains rsync: strip it, commit, push before any manual rsync"
+    ]
+  },
+  "AI_READ_THIS_FIRST": {
+    "project": "site_Dev",
+    "repo": "https://github.com/vswebsitedesign-ctrl/site_Dev.git",
+    "live_url": "https://clearances-in-devon.co.uk",
+    "live_server": "217.154.33.12",
+    "deploy_user": "root",
+    "ssh_key": "~/.ssh/github_actions_bat",
+    "build_command": "python3 build.py",
+    "output_directory": "./build/",
+    "data_layer": "./data/pages.json",
+    "theme": "theme/base.html",
+    "master_report": "./Master_Report.json",
+    "recovery": [
+      "git clone https://github.com/vswebsitedesign-ctrl/site_Dev.git",
+      "python3 build.py"
+    ],
+    "mandatory_session_workflow": [
+      "1. bash session_start.sh \u2014 creates git branch, protects main",
+      "2. bash snapshot.sh \"label\" \u2014 run before EVERY risky change",
+      "3. bash restore.sh snapshots/X \u2014 instant restore if anything breaks",
+      "4. bash session_end.sh \"msg\" \u2014 merge to main, push, clean snapshots"
+    ],
+    "emergency_rollback": "git checkout main && git branch -D session-BRANCHNAME",
+    "ai_rules": [
+      "NEVER modify files inside ./build/ \u2014 fully overwritten on every build",
+      "NEVER rewrite build.py \u2014 targeted edits only",
+      "NEVER run sed/perl/regex on build/ files",
+      "NEVER commit directly to main during a session",
+      "NEVER use GitHub Actions to deploy to Plesk \u2014 build-only workflow only",
+      "NEVER leave send.php redirecting to /contact-us/",
+      "NEVER deploy without checking GitHub workflow first for rsync steps",
+      "NEVER guess paths \u2014 read Master Report first",
+      "ALWAYS run bash session_start.sh before any work",
+      "ALWAYS run bash snapshot.sh before every risky change",
+      "ALWAYS verify changes with a read-back command before building",
+      "ALWAYS confirm send.php email and POST field names before deploying",
+      "ALWAYS check thank-you slug exists in pages.json before deploying",
+      "Content changes go in data/pages.json only",
+      "Layout changes go in theme/base.html only if unavoidable",
+      "Never make changes without telling the human exactly what will change first"
+    ]
+  },
+  "critical_ai_guardrails": {
+    "avoid_build_folder_modifications": "NEVER attempt to run sed, perl, or text replacements on files inside ./build/ \u2014 fully overwritten on every build",
+    "no_blind_rewrites": "AI must read Master Report completely before generating any bash commands \u2014 no blind regex or file overwrites without tracking state dependencies first",
+    "targeted_edits_only": "build.py must never be fully rewritten \u2014 targeted single insertions only",
+    "no_direct_main_commits": "Never commit directly to main during a session \u2014 always use session branch",
+    "read_before_write": "Always verify changes with a read-back command before building",
+    "deploy_check": "Always check deploy.yml for rsync steps before any manual rsync \u2014 strip, commit, push if found"
+  },
+  "ai_screwup_incident_log": {
+    "note": "Log AI failures here permanently \u2014 append only, never delete",
+    "incidents": [
+      {
+        "failure_id": 1,
+        "title": "EXPLANATIONS BEFORE COMMANDS",
+        "rule_violated": "ABSOLUTE EXECUTION DIRECTIVE",
+        "what_happened": "AI produced explanations before commands.",
+        "rule_to_enforce": "First output must always be a bash command. No exceptions."
+      },
+      {
+        "failure_id": 2,
+        "title": "FILES FOR DOWNLOAD INSTEAD OF WRITING VIA COMMANDS",
+        "rule_violated": "ABSOLUTE EXECUTION DIRECTIVE",
+        "what_happened": "AI created files for download instead of writing via commands.",
+        "rule_to_enforce": "NEVER use present_files, artifacts or downloads. ALWAYS use cat, python3 or tee."
+      },
+      {
+        "failure_id": 3,
+        "title": "BUNDLED MULTIPLE STEPS INTO ONE SCRIPT",
+        "rule_violated": "ABSOLUTE EXECUTION DIRECTIVE",
+        "what_happened": "AI bundled multiple steps into one script instead of one command at a time.",
+        "rule_to_enforce": "Always give one command, wait for confirmation, then give the next."
+      },
+      {
+        "failure_id": 4,
+        "title": "REPEATED A FAILED METHOD AFTER CORRECTION",
+        "rule_violated": "CORE PRINCIPLES \u2014 never repeat failed method",
+        "what_happened": "AI repeated a failed method after being corrected once.",
+        "rule_to_enforce": "If corrected once, the method changes permanently."
+      },
+      {
+        "failure_id": 5,
+        "title": "ASKED WHAT WAS IN AN UPLOADED FILE",
+        "rule_violated": "ABSOLUTE EXECUTION DIRECTIVE",
+        "what_happened": "AI asked what was in an uploaded file instead of reading it immediately.",
+        "rule_to_enforce": "ALWAYS read uploaded files immediately and act."
+      },
+      {
+        "failure_id": 6,
+        "title": "ASKED FOR INFORMATION ALREADY IN UPLOADED FILES",
+        "rule_violated": "ABSOLUTE EXECUTION DIRECTIVE",
+        "what_happened": "AI asked for information already available in uploaded files.",
+        "rule_to_enforce": "NEVER ask for information already in an uploaded file."
+      },
+      {
+        "failure_id": 7,
+        "title": "DEPLOYMENT INSTRUCTIONS WITHOUT READING PROJECT REPORT",
+        "rule_violated": "DEPLOYMENT section",
+        "what_happened": "AI gave deployment instructions without reading the project report first.",
+        "rule_to_enforce": "NEVER give deployment instructions without reading the project report first."
+      },
+      {
+        "failure_id": 8,
+        "title": "USED SED FOR SPECIAL CHARACTER REPLACEMENTS",
+        "rule_violated": "ZSH RULES",
+        "what_happened": "AI used sed for replacements containing special characters.",
+        "rule_to_enforce": "ALWAYS use Python for special characters \u2014 never sed."
+      },
+      {
+        "failure_id": 9,
+        "title": "INCREMENTAL FIXES TO BROKEN LAYOUTS",
+        "rule_violated": "CORE PRINCIPLES \u2014 no debugging loops",
+        "what_happened": "AI attempted incremental fixes to broken layouts instead of rebuilding.",
+        "rule_to_enforce": "If broken: REBUILD immediately. No debugging loops."
+      }
+    ]
+  },
+  "session_workflow_scripts": {
+    "status": "CREATED",
+    "scripts_required": [
+      "session_start.sh \u2014 creates git branch, protects main",
+      "snapshot.sh \u2014 snapshots current state before risky changes",
+      "restore.sh \u2014 instant restore from snapshot",
+      "session_end.sh \u2014 merges to main, pushes, cleans snapshots"
+    ],
+    "note": "Scripts should be created in project root \u2014 see site_tales-from-a-harrogate-caravan as reference implementation",
+    "scripts": [
+      "session_start.sh \u2014 creates timestamped session branch, protects main",
+      "snapshot.sh \"label\" \u2014 snapshots base.html, pages.json, build.py before risky changes",
+      "restore.sh snapshots/TIMESTAMP-label \u2014 instant restore from snapshot",
+      "session_end.sh \"msg\" \u2014 merges to main, pushes, cleans snapshots"
+    ]
+  },
+  "governing_rule": {
+    "rule": "Only add complexity when you can point to a real, observed failure",
+    "not": [
+      "might scale later",
+      "could improve performance",
+      "best practice at big tech scale"
+    ],
+    "every_decision_must_be_justified_by": "A specific, documented problem at a specific scale"
+  },
+  "stop_protocol": {
+    "trigger": "IF user says STOP",
+    "action": "halt immediately \u2014 no continuation, no suggestions \u2014 wait"
+  },
+  "error_recovery": {
+    "on_failure": [
+      "stop",
+      "change approach entirely",
+      "reuse working code"
+    ],
+    "if_unclear": "ask once before acting",
+    "if_destructive": "show verification command first, then execute",
+    "forbidden": [
+      "repeated attempts with same method",
+      "trial-and-error loops",
+      "debugging broken layouts \u2014 rebuild instead"
+    ]
+  },
+  "complexity_decision_guide": {
+    "governing_rule": "Only add complexity when you can point to a real, observed failure",
+    "components": {
+      "schema_validation": "Add when a missing field breaks the build silently",
+      "caching": "Add when full build takes more than 3 minutes",
+      "rollback_script": "Add when you have restored from backup more than once \u2014 not before"
+    }
+  },
+  "key_lessons": [
+    "Always read uploaded files immediately \u2014 never ask what is in them",
+    "Never give deployment instructions without reading the project report first",
+    "Never use sed for replacements with special characters \u2014 always Python",
+    "Always verify output after every change \u2014 build success alone is not sufficient",
+    "rsync send.php and .htaccess separately \u2014 they live in project root not build/",
+    "Never repeat a failed approach \u2014 change method immediately",
+    "Only add complexity when you can point to a real, observed failure",
+    "If broken: REBUILD immediately \u2014 no debugging loops",
+    "One command at a time \u2014 wait for confirmation before the next",
+    "Hero image contains business name and phone \u2014 never add text overlay",
+    "send.php email confirmed as info@clearances-in-devon.co.uk"
+  ]
 }
