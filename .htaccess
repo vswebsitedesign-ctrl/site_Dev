@@ -1,0 +1,15 @@
+Options -Indexes
+
+# Force www to non-www
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.clearances-in-devon\.co\.uk [NC]
+RewriteRule ^(.*)$ https://clearances-in-devon.co.uk/$1 [R=301,L]
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Clean URLs — route directory requests to index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^.]+)/?$ /$1/index.html [L]
