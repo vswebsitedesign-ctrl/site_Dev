@@ -191,6 +191,26 @@
     {
       "date": "2026-06-03",
       "change": "FIXED: robots.txt and sitemap.xml now generated from pages.json on every build. 31 URLs confirmed in sitemap. Committed to session-20260603-110856."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "Fix: snapshots/ added to .gitignore \u2014 snapshot files are ephemeral and must never be committed to git."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "CREATED: send.php with confirmed field names (first_name, surname, phone, postcode, service[], message), email info@clearances-in-devon.co.uk, success redirect /thank-you/. Committed to session branch."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "CREATED: .htaccess with www to non-www redirect, HTTPS enforce, clean URL routing. Committed to session branch."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "RULE ADDED: never deploy to live server until explicitly instructed by human. All work verified locally first."
+    },
+    {
+      "date": "2026-06-03",
+      "change": "FINDING: 2931 service-location pages missing from pages.json. Live site has 2960 URLs, pages.json has 31. Jekyll plugin-generated service x location pages were never migrated. Awaiting decision on generation strategy: crawl live site, generate from template, or hybrid."
     }
   ],
   "known_issues": {
@@ -249,7 +269,16 @@
     "github_actions_runs_confirmed": 2,
     "live_site_status": "LIVE - serving old Jekyll build - omni-builder NOT deployed to live server",
     "live_site_title": "Clearances in Devon | Serving the Whole of Devon",
-    "live_site_http_status": "200"
+    "live_site_http_status": "200",
+    "missing_pages": {
+      "finding_date": "2026-06-03",
+      "live_url_count": 2960,
+      "pages_json_count": 31,
+      "missing_count": 2931,
+      "pattern": "service-location flat URLs e.g. house-clearance-barnstaple, garage-clearance-bideford",
+      "cause": "Jekyll service_pages.rb plugin generated 2880+ pages from 18 services x 160 Devon locations \u2014 never migrated into pages.json",
+      "status": "UNRESOLVED \u2014 awaiting decision on generation strategy"
+    }
   },
   "deployment_workflow": {
     "workflow_status": "not set up",
@@ -261,7 +290,7 @@
     "git_remote": "https://github.com/vswebsitedesign-ctrl/site_Dev.git",
     "server_ip": "217.154.33.12",
     "deploy_configured": true,
-    "deploy_status": "MANUAL RSYNC \u2014 GitHub Actions build-only, rsync run manually from local machine",
+    "deploy_status": "HOLD \u2014 do not deploy until human explicitly instructs",
     "recommended_method": "Manual rsync over SSH using ~/.ssh/github_actions_bat as root to Plesk httpdocs",
     "live_server_build": "OLD JEKYLL BUILD - omni-builder output never deployed to Plesk",
     "deploy_user": "root",
@@ -270,11 +299,14 @@
     "send_php": {
       "location": "project root \u2014 not build/",
       "rsync_command": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" send.php root@217.154.33.12:/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/",
-      "success_redirect": "header('Location: /thank-you/');",
+      "success_redirect": "header('Location: /thank-you/'); \u2014 confirmed",
       "email": "info@clearances-in-devon.co.uk",
-      "post_fields": "must exactly match HTML form field names \u2014 confirm before deploying",
+      "post_fields": "first_name, surname, phone, postcode, service[], message \u2014 confirmed matching contact form",
       "htaccess_note": ".htaccess must be rsynced separately alongside send.php \u2014 lives in project root not build/",
-      "htaccess_rsync": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" .htaccess root@217.154.33.12:/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/"
+      "htaccess_rsync": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" .htaccess root@217.154.33.12:/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/",
+      "status": "CREATED 2026-06-03",
+      "error_redirects": "/contact/?error=missing, /contact/?error=send",
+      "htaccess_status": "CREATED 2026-06-03 \u2014 www redirect, HTTPS enforce, clean URL routing"
     },
     "robots_and_sitemap": {
       "rule": "Must be regenerated from pages.json on every build \u2014 never static files in repo",
@@ -335,7 +367,8 @@
       "ALWAYS check thank-you slug exists in pages.json before deploying",
       "Content changes go in data/pages.json only",
       "Layout changes go in theme/base.html only if unavoidable",
-      "Never make changes without telling the human exactly what will change first"
+      "Never make changes without telling the human exactly what will change first",
+      "NEVER deploy to live server until explicitly told to by the human \u2014 all work verified locally first"
     ]
   },
   "critical_ai_guardrails": {
@@ -428,7 +461,8 @@
       "snapshot.sh \"label\" \u2014 snapshots base.html, pages.json, build.py before risky changes",
       "restore.sh snapshots/TIMESTAMP-label \u2014 instant restore from snapshot",
       "session_end.sh \"msg\" \u2014 merges to main, pushes, cleans snapshots"
-    ]
+    ],
+    "gitignore_note": "snapshots/ added to .gitignore 2026-06-03 \u2014 snapshot files must never be committed to git"
   },
   "governing_rule": {
     "rule": "Only add complexity when you can point to a real, observed failure",
