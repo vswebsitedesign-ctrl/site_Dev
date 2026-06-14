@@ -13,3 +13,11 @@ Thumbs.db
 # Secrets (if any)
 *.env
 snapshots/
+
+# Audit cleanup 2026-06-14
+key.json
+gsc_audit.json
+homepage_body.html
+live_backup/
+assets/css/
+index.html

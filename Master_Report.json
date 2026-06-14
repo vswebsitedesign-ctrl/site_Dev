@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-06-03",
+  "last_updated": "2026-06-14",
   "project_metadata": {
     "name": "site_Dev",
     "domain": "https://clearances-in-devon.co.uk",
@@ -232,6 +232,54 @@
     {
       "date": "2026-06-04",
       "change": "RESOLVED: All static pages, service hub pages and homepage body_content pulled from live site. Full standalone HTML removed from all pages. location-grid, two-col and page-content CSS added to base.html. Call badge moved to bottom-centre. Cookie consent banner added. 2962 pages building and rendering correctly locally."
+    },
+    {
+      "date": "2026-06-08",
+      "change": "Deployment rules appended to Master Report \u2014 all sites: server IP, SSH key, deploy command, send.php rules, thank-you page rule, robots/sitemap rules, homepage rule, master report rule, never list"
+    },
+    {
+      "date": "2026-06-08",
+      "change": "Cookie banner requirement documented \u2014 pending human review and approval before implementation"
+    },
+    {
+      "date": "2026-06-08",
+      "change": "Safety practices adapted from site_tales-from-a-harrogate-caravan: modus_operandi added, server_capabilities added, rsync_directive added, snapshot_efficiency rule added, ai_workflow_rule added"
+    },
+    {
+      "date": "2026-06-08",
+      "change": "Jekyll-specific rules removed from Master Report \u2014 only universal static site practices retained"
+    },
+    {
+      "date": "2026-06-14",
+      "change": "Appended session_workflow_git, image_optimisation, path_discipline, and recovery blocks \u2014 adopted from site_tales-from-a-harrogate-caravan best practices."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "GSC audit appended \u2014 314/2962 pages seen by Google, 78 clicks, 8248 impressions, avg position 32.87. Winning categories: scrap-collection, caravan-clearance. Priority: crawl acceleration and quick-win position improvements."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "Pending fixes added from local fact-finding audit \u2014 3 critical, 3 high, 5 medium, 1 low. Key issues: key.json security risk, hardcoded title tags, no meta descriptions, no canonicals, dead main.css, false van tracking claim."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "GitHub fact-finding audit appended to pending_fixes \u2014 1 critical (key.json gitignore), 1 high (uncommitted Master Report), 4 medium (untracked files at risk). Workflow confirmed build-only and correct."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "Live site audit appended \u2014 all 15 pages return 200, send.php confirmed live, .htaccess confirmed working. L1 and H1 closed. No local vs live drift detected. Title hardcoded and missing meta/canonical/OG confirmed on live server."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "Live server SSH audit appended \u2014 PHP 8.3.6, 2962 pages confirmed, send.php live, contact.php confirmed empty dead file, Zone.Identifier junk files found in assets on server, main.css confirmed never deployed. M1 closed. Deploy safety confirmed."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "Master Report tidied for AI handoff \u2014 last_updated corrected, pending_fixes rebuilt with clean priority structure, closed items moved to closed block, GitHub audit items merged into main lists. Report is now AI-handoff ready."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "C2, C3, H2 closed \u2014 dynamic titles, meta descriptions, and canonical URLs now generated for all 2962 pages via build.py token injection and pages.json title generation. 2932 titles generated from slug patterns."
     }
   ],
   "known_issues": {
@@ -547,5 +595,547 @@
     "pages_added": 2931,
     "template_source": "Crawled from live site \u2014 18 service templates extracted from https://clearances-in-devon.co.uk",
     "uniqueness": "Location name, service name, review names and cross-service links substituted deterministically per page"
+  },
+  "deployment_rules": {
+    "all_sites": {
+      "server_ip": "217.154.33.12",
+      "deploy_user": "root",
+      "ssh_key": "~/.ssh/github_actions_bat",
+      "deploy_command": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" build/ root@217.154.33.12:/var/www/vhosts/{domain}/httpdocs/",
+      "github_actions": "build-only \u2014 no rsync step permitted in deploy.yml",
+      "if_deploy_yml_has_rsync": "strip it, commit, push before any manual rsync"
+    },
+    "send_php": {
+      "location": "project root (not build/)",
+      "rsync_command": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" send.php root@217.154.33.12:/var/www/vhosts/{domain}/httpdocs/",
+      "success_redirect": "header('Location: /thank-you/');",
+      "addAddress": "must match the correct project email \u2014 confirm before deploying",
+      "post_fields_rule": "POST field names in send.php must exactly match HTML form field names \u2014 confirm before deploying"
+    },
+    "thank_you_page": {
+      "rule": "Every site must have a thank-you slug in pages.json",
+      "if_missing": "create and append \u2014 never delete existing pages"
+    },
+    "robots_and_sitemap": {
+      "rule": "Must be regenerated from pages.json on every build \u2014 never static files in repo",
+      "robots_txt": "User-agent: *, Allow: /, Sitemap: https://{domain}/sitemap.xml",
+      "sitemap_xml": "all slugs from pages.json, priority 0.7, changefreq monthly"
+    },
+    "homepage": {
+      "rule": "After every build check known_issues.homepage_slug in Master Report",
+      "fix": "If homepage slug is not index: cp build/{slug}/index.html build/index.html"
+    },
+    "master_report": {
+      "rule": "Append only \u2014 never delete fields",
+      "changelog": "Log every change with date",
+      "deployment_workflow": "must reflect confirmed live state after every session"
+    },
+    "never": [
+      "Never guess paths \u2014 read Master Report first",
+      "Never use GitHub Actions to deploy to Plesk",
+      "Never leave send.php redirecting to /contact-us/",
+      "Never deploy without checking GitHub workflow first"
+    ]
+  },
+  "cookie_banner_pending": {
+    "status": "awaiting_approval",
+    "approach": "inline HTML/CSS/JS in theme/base.html",
+    "dependencies": "none \u2014 pure inline implementation",
+    "validation_needed": [
+      "verify localStorage works",
+      "verify banner appears on all pages",
+      "verify hidden after accept",
+      "verify does not break existing layout"
+    ]
+  },
+  "modus_operandi": {
+    "note": "Mandatory workflow rules adapted from site_tales-from-a-harrogate-caravan \u2014 confirmed working 2026-06-06",
+    "rules": [
+      "1. ALWAYS snapshot before every edit \u2014 use: bash snapshot.sh \"label\"",
+      "2. Snapshot and edit combined in ONE bash command \u2014 snapshot runs first, edit only proceeds if snapshot succeeds",
+      "3. ALWAYS build and serve after every edit to verify \u2014 use: python3 build.py && cd build && python3 -m http.server 8000",
+      "4. ALWAYS append master report at end of session \u2014 never delete, append only",
+      "5. NEVER modify files inside ./build/ \u2014 fully overwritten on every build",
+      "6. NEVER rewrite build.py \u2014 targeted edits only",
+      "7. Content changes go in data/pages.json only",
+      "8. Master report is single source of truth \u2014 keep in sync with all data files",
+      "9. One bash command at a time \u2014 copy-paste ready",
+      "10. Confirm static modular architecture best practice with every command",
+      "11. ALWAYS chain build and serve to the end of every edit command \u2014 snapshot, edit, build, serve in one paste"
+    ],
+    "command_sequence": {
+      "edit": "bash snapshot.sh \"label\" && [edit command] && python3 build.py && cd build && python3 -m http.server 8000",
+      "verify": "python3 build.py && cd build && python3 -m http.server 8000",
+      "end_session": "bash session_end.sh \"msg\" then rsync deploy command"
+    }
+  },
+  "server_capabilities": {
+    "php": true,
+    "hosting": "Plesk",
+    "server_ip": "217.154.33.12",
+    "directive": "AI must check this block before recommending any form or submission solution. PHP is available. Formspree and mailto fallbacks are never needed on this project.",
+    "send_php": {
+      "path": "/home/chubert/omni-builder/sites/site_Dev/send.php",
+      "exists": true,
+      "fields": [
+        "first_name",
+        "surname",
+        "phone",
+        "postcode",
+        "service[]",
+        "message"
+      ],
+      "on_success": "redirects to /thank-you/",
+      "directive": "AI must never create a new send.php or recommend Formspree. This file handles all form submissions on the project.",
+      "deployment_note": "send.php is NOT in the build/ directory and is NOT deployed by rsync. It must be deployed separately via rsync command in deployment_rules.send_php.rsync_command"
+    }
+  },
+  "rsync_directive": {
+    "rule": "NEVER use rsync --delete on this project",
+    "reason": "rsync --delete wipes server-only files not in build/ including send.php and .htaccess",
+    "correct_rsync": "rsync -avz -e \"ssh -i ~/.ssh/github_actions_bat\" build/ root@217.154.33.12:/var/www/vhosts/{domain}/httpdocs/"
+  },
+  "snapshot_efficiency": {
+    "rule": "AI must include the snapshot.sh command at the start of every risky edit command block",
+    "reason": "So the user can copy and run it as one continuous sequence without waiting for AI to respond again",
+    "pattern": "bash snapshot.sh \"description of change\" && [actual edit command] && python3 build.py && cd build && python3 -m http.server 8000"
+  },
+  "ai_workflow_rule": {
+    "rule": "AI must always run snapshot.sh before any risky change to build.py or theme/base.html",
+    "mandatory_order": [
+      "1. Read master report fully before issuing any commands",
+      "2. bash session_start.sh before any work",
+      "3. bash snapshot.sh before every risky change",
+      "4. Targeted edit only",
+      "5. python3 build.py to verify",
+      "6. bash session_end.sh to close"
+    ],
+    "directive": "AI must never issue an edit command to build.py or theme/base.html without snapshot.sh having been run first in the same session. No exceptions."
+  },
+  "session_workflow_git": {
+    "source": "Adopted from site_tales-from-a-harrogate-caravan confirmed working 2026-06-06",
+    "session_start": "bash session_start.sh \u2014 creates a git branch immediately, main is always protected",
+    "before_risky_change": "bash snapshot.sh \"description\" \u2014 snapshots all critical files before every risky change",
+    "restore_from_snapshot": "bash restore.sh snapshots/TIMESTAMP_label \u2014 restores all critical files",
+    "session_end": "bash session_end.sh \"description\" \u2014 merges branch to main, pushes to GitHub, cleans snapshots",
+    "emergency_rollback": "git checkout main && git branch -D session-branch-name",
+    "rule": "Never commit directly to main during a session"
+  },
+  "image_optimisation": {
+    "tool": "cwebp",
+    "standard_command": "cwebp -q 82 assets/images/INPUT.png -o assets/images/OUTPUT.webp",
+    "rules": [
+      "Always optimise images to WebP using cwebp at q82 before adding to build.py image copy list",
+      "Never add raw PNG or JPG files to the build",
+      "Always delete original PNG or JPG after confirmed WebP conversion",
+      "Never leave Zone.Identifier junk files in assets/images",
+      "Always confirm output file size after optimisation before proceeding"
+    ],
+    "naming_convention": "lowercase-hyphenated-slug.webp \u2014 no spaces, no uppercase e.g. house-clearance-barnstaple-hero.webp",
+    "new_image_folder_rule": "Every new image folder added to assets/images/ MUST have a corresponding copy block added to build.py \u2014 without it images will not appear in build/"
+  },
+  "path_discipline": {
+    "rule": "AI must confirm the full correct project path from Master_Report.json before issuing any bash command",
+    "correct_path": "/home/chubert/omni-builder/sites/site_Dev/",
+    "violation_pattern": "AI issuing commands against incorrect or assumed paths wastes time and ignores the omni-builder path clearly stated in the master report",
+    "directive": "No assumptions. No shortcuts. Read the report first."
+  },
+  "recovery": {
+    "description": "Full site recovery from scratch \u2014 two commands only",
+    "step_1": "git clone https://github.com/vswebsitedesign-ctrl/site_Dev.git",
+    "step_2": "python3 -c \"from engine.build_sites import build_single_site; build_single_site(\"sites/site_Dev\")\"",
+    "note": "All assets, content, and build logic are in the repo. Everything rebuilds automatically."
+  },
+  "gsc_audit_2026_06_14": {
+    "date": "2026-06-14",
+    "tool": "Google Search Console API v1",
+    "date_range": "2026-03-16 to 2026-06-14",
+    "sitemap": {
+      "url": "https://clearances-in-devon.co.uk/sitemap.xml",
+      "submitted": "2026-03-26",
+      "last_downloaded": "2026-06-09",
+      "errors": 0,
+      "warnings": 0,
+      "urls_submitted": 2962,
+      "urls_indexed": 0,
+      "note": "Google crawling via discovery not sitemap trust \u2014 not a crisis but sitemap indexing signal is weak"
+    },
+    "coverage": {
+      "total_pages_in_site": 2962,
+      "urls_seen_by_google": 314,
+      "urls_not_yet_seen": 2648,
+      "percent_unseen": 89,
+      "finding": "Critical \u2014 89% of site invisible to Google. Site launched March 2026, crawl rate too slow without intervention."
+    },
+    "performance_summary": {
+      "pages_with_data": 314,
+      "total_clicks": 78,
+      "total_impressions": 8248,
+      "avg_ctr_percent": 1.19,
+      "avg_position": 32.87,
+      "finding": "Average position 32-33 means pages 3-4. CTR expected at this depth. Growth dependent on position improvements."
+    },
+    "winning_categories": [
+      "scrap-collection",
+      "caravan-clearance-and-removal"
+    ],
+    "top_performing_pages": [
+      {
+        "url": "/caravan-clearance-and-removal-exeter/",
+        "clicks": 13,
+        "impressions": 171,
+        "position": 15.1
+      },
+      {
+        "url": "/scrap-collection-holsworthy/",
+        "clicks": 4,
+        "impressions": 76,
+        "position": 11.5
+      },
+      {
+        "url": "/scrap-collection-teignmouth/",
+        "clicks": 4,
+        "impressions": 65,
+        "position": 14.7
+      },
+      {
+        "url": "/scrap-collection-braunton/",
+        "clicks": 4,
+        "impressions": 54,
+        "position": 12.7
+      },
+      {
+        "url": "/scrap-collection-cullompton/",
+        "clicks": 3,
+        "impressions": 170,
+        "position": 40.9
+      },
+      {
+        "url": "/scrap-collection-exmouth/",
+        "clicks": 3,
+        "impressions": 98,
+        "position": 30.3
+      },
+      {
+        "url": "/scrap-collection-ottery-st-mary/",
+        "clicks": 3,
+        "impressions": 129,
+        "position": 38.9
+      }
+    ],
+    "quick_win_pages": [
+      {
+        "url": "/one-off-rubbish-collection-buckland-monachorum/",
+        "impressions": 78,
+        "position": 10.7,
+        "note": "Position 11 \u2014 one nudge onto page 1"
+      },
+      {
+        "url": "/transport-and-moving-services-northam/",
+        "impressions": 64,
+        "position": 11.4,
+        "note": "Position 11 \u2014 one nudge onto page 1"
+      },
+      {
+        "url": "/transport-and-moving-services-modbury/",
+        "impressions": 75,
+        "position": 19.3,
+        "note": "Page 2 \u2014 close to page 1"
+      },
+      {
+        "url": "/scrap-car-collection-ilfracombe/",
+        "impressions": 176,
+        "position": 22.1,
+        "note": "High impressions just off page 2"
+      }
+    ],
+    "high_impression_zero_click_pages": [
+      {
+        "url": "/attic-loft-clearance-bradworthy/",
+        "impressions": 388,
+        "position": 75.7
+      },
+      {
+        "url": "/house-clearance-tavistock/",
+        "impressions": 343,
+        "position": 62.2
+      },
+      {
+        "url": "/scrap-collection-bideford/",
+        "impressions": 180,
+        "position": 30.7
+      },
+      {
+        "url": "/house-clearance-crediton/",
+        "impressions": 158,
+        "position": 84.3
+      },
+      {
+        "url": "/garden-tidy-up-tavistock/",
+        "impressions": 155,
+        "position": 46.9
+      },
+      {
+        "url": "/attic-loft-clearance-exmouth/",
+        "impressions": 134,
+        "position": 53.9
+      },
+      {
+        "url": "/house-clearance-plymouth/",
+        "impressions": 129,
+        "position": 69.1
+      },
+      {
+        "url": "/house-clearance-holsworthy/",
+        "impressions": 106,
+        "position": 84.8
+      }
+    ],
+    "homepage": {
+      "url": "/",
+      "impressions": 600,
+      "clicks": 1,
+      "position": 54.4,
+      "finding": "Position 54 with 600 impressions \u2014 title tag and meta description need strengthening for Devon-wide clearance terms"
+    },
+    "priority_actions": [
+      "1. Crawl acceleration \u2014 add internal links from crawled pages to 2648 unseen pages, or use GSC URL inspection to submit batches",
+      "2. Quick wins \u2014 improve content on positions 8-15 pages: buckland-monachorum, northam, modbury, ilfracombe",
+      "3. Double down on scrap-collection and caravan-clearance \u2014 these drive almost all clicks",
+      "4. Homepage \u2014 strengthen title tag and meta description for Devon-wide clearance terms",
+      "5. House clearance pages \u2014 tavistock, crediton, plymouth, holsworthy all have high impressions but buried positions"
+    ],
+    "wasted_impressions_note": "Queries from outside Devon appearing (Bristol, Doncaster, Harpenden) \u2014 non-local searchers finding generic pages. Monitor but not critical."
+  },
+  "pending_fixes": {
+    "last_updated": "2026-06-14",
+    "critical": [
+      {
+        "id": "C1",
+        "issue": "key.json not in .gitignore \u2014 security risk",
+        "detail": "key.json is untracked and safe currently but one git add . would push the Google service account key to GitHub.",
+        "fix": "Add key.json to .gitignore"
+      },
+      {
+        "id": "GC1",
+        "issue": "key.json not in .gitignore \u2014 one accidental git add . pushes it to GitHub",
+        "detail": "key.json is currently untracked and safe \u2014 never committed. But not in .gitignore.",
+        "fix": "Add key.json to .gitignore immediately before next commit \u2014 same fix as C1"
+      }
+    ],
+    "high": [
+      {
+        "id": "H3",
+        "issue": "Call badge contains false van tracking claim",
+        "detail": "base.html call badge says Track our van live \u2014 know exactly when Mark is near. No van tracking feature exists.",
+        "fix": "Remove van tracking text from call badge in base.html and replace with simple call-to-action"
+      },
+      {
+        "id": "GH1",
+        "issue": "Master_Report.json modified locally but not committed",
+        "detail": "All session work from 2026-06-14 is unsaved to the repo. Last commit was the 2962-page build from May 2026.",
+        "fix": "Commit Master_Report.json after all pending fixes are applied"
+      }
+    ],
+    "medium": [
+      {
+        "id": "M2",
+        "issue": "index.html at project root is 0 bytes",
+        "detail": "An empty index.html exists at project root. Purpose unknown. Not part of the build.",
+        "fix": "Confirm purpose \u2014 delete if not needed"
+      },
+      {
+        "id": "M3",
+        "issue": "homepage_body.html at project root is 64KB \u2014 purpose unclear",
+        "detail": "Large HTML file at project root not referenced by build.py or any other file.",
+        "fix": "Confirm purpose \u2014 delete or document in master report"
+      },
+      {
+        "id": "M4",
+        "issue": "Zone.Identifier junk file at project root",
+        "detail": "gsc-extract-499402-a527c3618eea.json:Zone.Identifier is a Windows metadata file at project root.",
+        "fix": "rm \"/home/chubert/omni-builder/sites/site_Dev/gsc-extract-499402-a527c3618eea.json:Zone.Identifier\""
+      },
+      {
+        "id": "M5",
+        "issue": "No Open Graph tags",
+        "detail": "No og:title, og:description, og:url tags in base.html. Social sharing will show no preview.",
+        "fix": "Add Open Graph meta tags to base.html using {{ }} tokens injected by build.py"
+      },
+      {
+        "id": "GM1",
+        "issue": "gsc_audit.json untracked \u2014 at risk of accidental commit",
+        "detail": "gsc_audit.json contains GSC performance data and is 226KB. Not in .gitignore.",
+        "fix": "Add gsc_audit.json to .gitignore"
+      },
+      {
+        "id": "GM2",
+        "issue": "homepage_body.html untracked \u2014 at risk of accidental commit",
+        "detail": "64KB untracked working file at project root. Not in .gitignore.",
+        "fix": "Confirm purpose then delete or add to .gitignore"
+      },
+      {
+        "id": "GM3",
+        "issue": "live_backup/ untracked \u2014 at risk of accidental commit",
+        "detail": "live_backup/ directory with 83 files is untracked and not in .gitignore.",
+        "fix": "Add live_backup/ to .gitignore"
+      },
+      {
+        "id": "GM4",
+        "issue": "assets/css/ untracked \u2014 main.css dead file at risk of accidental commit",
+        "detail": "assets/css/main.css is 321KB, never linked in base.html, never deployed to live server. Decision needed.",
+        "fix": "Delete assets/css/main.css and assets/css/ directory entirely"
+      }
+    ],
+    "low": [
+      {
+        "id": "S1",
+        "issue": "Zone.Identifier junk files in assets/images/ on live server",
+        "detail": "Four .webp:Zone.Identifier Windows metadata files present in httpdocs/assets/images/ on live server.",
+        "fix": "ssh -i ~/.ssh/github_actions_bat root@217.154.33.12 \"find /var/www/vhosts/clearances-in-devon.co.uk/httpdocs/assets/ -name \"*:Zone.Identifier\" -delete\""
+      }
+    ],
+    "closed": [
+      {
+        "id": "H1",
+        "issue": ".htaccess not copied into build/",
+        "resolution": "CLOSED \u2014 .htaccess confirmed live and working on server. Clean URLs serving correctly."
+      },
+      {
+        "id": "M1",
+        "issue": "main.css dead file deployed on every build",
+        "resolution": "CLOSED \u2014 main.css confirmed never deployed. assets/css/ does not exist on live server."
+      },
+      {
+        "id": "L1",
+        "issue": "Verify nav and footer slugs exist",
+        "resolution": "CLOSED \u2014 all slugs confirmed live and returning 200."
+      },
+      {
+        "id": "C2",
+        "issue": "Page title hardcoded in base.html \u2014 all 2962 pages have identical title tag",
+        "detail": "Every page renders: Clearances in Devon | Serving the Whole of Devon. title field exists in pages.json but build.py never injects it.",
+        "fix": "Add {{ title }} token to base.html <title> tag and inject page title in build.py",
+        "resolution": "CLOSED \u2014 implemented via build.py token injection and pages.json title generation. All 2962 pages now have unique titles and meta descriptions."
+      },
+      {
+        "id": "C3",
+        "issue": "No meta description on any page",
+        "detail": "base.html has no <meta name=\"description\"> tag. No description injected for any of the 2962 pages.",
+        "fix": "Add {{ meta_description }} token to base.html and generate per-page meta descriptions in build.py",
+        "resolution": "CLOSED \u2014 implemented via build.py token injection and pages.json title generation. All 2962 pages now have unique titles and meta descriptions."
+      },
+      {
+        "id": "H2",
+        "issue": "No canonical tags on any page",
+        "detail": "With 2962 similar service-location pages Google may see duplicate content risk. No <link rel=\"canonical\"> in base.html.",
+        "fix": "Add {{ canonical_url }} token to base.html and inject per-page canonical URL in build.py",
+        "resolution": "CLOSED \u2014 canonical URL token added to base.html, injected per-page in build.py."
+      }
+    ]
+  },
+  "live_site_audit_2026_06_14": {
+    "date": "2026-06-14",
+    "method": "HTTP response checks and HTML head tag inspection via Python urllib",
+    "response_codes": {
+      "all_checked_pages": "200 OK",
+      "pages_checked": [
+        "/",
+        "/about-us/",
+        "/contact/",
+        "/services/",
+        "/reuse-and-recycling-policy/",
+        "/terms-and-conditions/",
+        "/cookie-policy/",
+        "/thank-you/",
+        "/sitemap.xml",
+        "/robots.txt",
+        "/send.php",
+        "/house-clearance-devon/",
+        "/caravan-clearance-and-removal-exeter/",
+        "/scrap-collection-holsworthy/",
+        "/one-off-rubbish-collection-buckland-monachorum/"
+      ],
+      "finding": "All 15 pages return 200. No 404s. Clean URLs working. send.php live and serving."
+    },
+    "head_tags_live": {
+      "title": "Clearances in Devon | Serving the Whole of Devon",
+      "meta_description": "NOT FOUND",
+      "canonical": "NOT FOUND",
+      "og_title": "NOT FOUND",
+      "finding": "Confirms local audit \u2014 title hardcoded, no meta description, no canonical, no OG tags on any page"
+    },
+    "htaccess": {
+      "status": "CONFIRMED LIVE",
+      "evidence": "Clean URLs serving correctly on all pages \u2014 .htaccess rewrite rules active on server",
+      "www_redirect": "Unverifiable from WSL due to DNS limitation \u2014 assumed working, rule is correct in .htaccess file"
+    },
+    "nav_and_footer_links": {
+      "status": "ALL VALID",
+      "confirmed_slugs": [
+        "services",
+        "reuse-and-recycling-policy",
+        "terms-and-conditions",
+        "cookie-policy",
+        "thank-you",
+        "about-us",
+        "contact"
+      ],
+      "finding": "All nav and footer linked pages confirmed live \u2014 removes pending fix L1"
+    },
+    "local_vs_live_drift": "NONE \u2014 live site matches local build exactly",
+    "pending_fix_updates": {
+      "L1": "CLOSED \u2014 all nav and footer slugs confirmed live and returning 200",
+      "H1": "CLOSED \u2014 .htaccess confirmed live and working, clean URLs serving correctly"
+    }
+  },
+  "live_server_ssh_audit_2026_06_14": {
+    "date": "2026-06-14",
+    "server": "217.154.33.12",
+    "httpdocs": "/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/",
+    "php_version": "8.3.6",
+    "disk_usage": "81MB",
+    "confirmed_good": [
+      "2962 page directories present \u2014 matches local build exactly",
+      "send.php live and present at httpdocs root",
+      ".htaccess live and confirmed working",
+      "sitemap.xml and robots.txt present",
+      "PHP 8.3.6 \u2014 current and healthy",
+      "main.css NOT on server \u2014 assets/css/ directory does not exist on live server, safe to delete locally"
+    ],
+    "server_only_files": {
+      "contact.php": {
+        "path": "/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/contact.php",
+        "size": "0 bytes",
+        "content": "EMPTY \u2014 file contains nothing",
+        "status": "DEAD FILE \u2014 safe to delete from server",
+        "risk": "Will be wiped on next rsync deploy anyway \u2014 no action required before deploy"
+      },
+      "privacy-policy.md": {
+        "path": "/var/www/vhosts/clearances-in-devon.co.uk/httpdocs/privacy-policy.md",
+        "status": "Raw markdown file \u2014 leftover from migration, not served as a page",
+        "risk": "Harmless \u2014 will be wiped on next rsync deploy"
+      }
+    },
+    "server_junk_files": {
+      "zone_identifiers": [
+        "assets/images/Clearances-in-Devon.webp:Zone.Identifier",
+        "assets/images/cropped-Clearances-in-Devon.webp:Zone.Identifier",
+        "assets/images/Clearances-in-Devon-Before.webp:Zone.Identifier",
+        "assets/images/Clearances-in-Devon-After.webp:Zone.Identifier"
+      ],
+      "status": "Windows metadata junk files on live server \u2014 harmless but should be removed",
+      "fix": "Remove via SSH or will be overwritten on next rsync deploy if assets are recopied"
+    },
+    "pending_fix_updates": {
+      "M1": "CLOSED \u2014 main.css confirmed never deployed to live server. Safe to delete assets/css/ locally.",
+      "new_S1": {
+        "id": "S1",
+        "issue": "Zone.Identifier junk files in assets/images/ on live server",
+        "fix": "ssh -i ~/.ssh/github_actions_bat root@217.154.33.12 \"find /var/www/vhosts/clearances-in-devon.co.uk/httpdocs/assets/ -name \"*:Zone.Identifier\" -delete\"",
+        "priority": "low"
+      }
+    },
+    "deploy_safety_confirmed": "Next rsync deploy is safe \u2014 contact.php is empty, privacy-policy.md is a leftover. Neither needs preserving. send.php must still be redeployed separately after rsync."
   }
 }

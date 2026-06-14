@@ -16,7 +16,13 @@ def build():
     for page in pages:
         slug = page['slug']
         content = page.get('body_content', '')
+        title = page.get('title', 'Clearances in Devon | Serving the Whole of Devon')
+        canonical_url = 'https://clearances-in-devon.co.uk/' + (slug + '/' if slug else '')
+        meta_description = page.get('meta_description', title + ' — Local clearance services across Devon. Free quotes from Mark. Licensed waste carrier.')
         html = template.replace('{{ content }}', content)
+        html = html.replace('{{ title }}', title)
+        html = html.replace('{{ canonical_url }}', canonical_url)
+        html = html.replace('{{ meta_description }}', meta_description)
         out_dir = os.path.join('build', slug) if slug else 'build'
         os.makedirs(out_dir, exist_ok=True)
         with open(os.path.join(out_dir, 'index.html'), 'w') as f:
