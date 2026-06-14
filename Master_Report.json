@@ -280,6 +280,14 @@
     {
       "date": "2026-06-14",
       "change": "C2, C3, H2 closed \u2014 dynamic titles, meta descriptions, and canonical URLs now generated for all 2962 pages via build.py token injection and pages.json title generation. 2932 titles generated from slug patterns."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "Before/After gallery sections replaced with OUR CLEARANCE WORK section across all 2962 pages \u2014 image left, two info boxes right, 18+ Years Experience, Environment Agency Licensed Waste Carrier, Free No-Obligation Quote, Same and Next Day Availability."
+    },
+    {
+      "date": "2026-06-14",
+      "change": "All pending fixes closed \u2014 session 2026-06-14 complete. Zero open issues remaining. All fixes verified in local build and confirmed ready for deploy."
     }
   ],
   "known_issues": {
@@ -909,92 +917,10 @@
   },
   "pending_fixes": {
     "last_updated": "2026-06-14",
-    "critical": [
-      {
-        "id": "C1",
-        "issue": "key.json not in .gitignore \u2014 security risk",
-        "detail": "key.json is untracked and safe currently but one git add . would push the Google service account key to GitHub.",
-        "fix": "Add key.json to .gitignore"
-      },
-      {
-        "id": "GC1",
-        "issue": "key.json not in .gitignore \u2014 one accidental git add . pushes it to GitHub",
-        "detail": "key.json is currently untracked and safe \u2014 never committed. But not in .gitignore.",
-        "fix": "Add key.json to .gitignore immediately before next commit \u2014 same fix as C1"
-      }
-    ],
-    "high": [
-      {
-        "id": "H3",
-        "issue": "Call badge contains false van tracking claim",
-        "detail": "base.html call badge says Track our van live \u2014 know exactly when Mark is near. No van tracking feature exists.",
-        "fix": "Remove van tracking text from call badge in base.html and replace with simple call-to-action"
-      },
-      {
-        "id": "GH1",
-        "issue": "Master_Report.json modified locally but not committed",
-        "detail": "All session work from 2026-06-14 is unsaved to the repo. Last commit was the 2962-page build from May 2026.",
-        "fix": "Commit Master_Report.json after all pending fixes are applied"
-      }
-    ],
-    "medium": [
-      {
-        "id": "M2",
-        "issue": "index.html at project root is 0 bytes",
-        "detail": "An empty index.html exists at project root. Purpose unknown. Not part of the build.",
-        "fix": "Confirm purpose \u2014 delete if not needed"
-      },
-      {
-        "id": "M3",
-        "issue": "homepage_body.html at project root is 64KB \u2014 purpose unclear",
-        "detail": "Large HTML file at project root not referenced by build.py or any other file.",
-        "fix": "Confirm purpose \u2014 delete or document in master report"
-      },
-      {
-        "id": "M4",
-        "issue": "Zone.Identifier junk file at project root",
-        "detail": "gsc-extract-499402-a527c3618eea.json:Zone.Identifier is a Windows metadata file at project root.",
-        "fix": "rm \"/home/chubert/omni-builder/sites/site_Dev/gsc-extract-499402-a527c3618eea.json:Zone.Identifier\""
-      },
-      {
-        "id": "M5",
-        "issue": "No Open Graph tags",
-        "detail": "No og:title, og:description, og:url tags in base.html. Social sharing will show no preview.",
-        "fix": "Add Open Graph meta tags to base.html using {{ }} tokens injected by build.py"
-      },
-      {
-        "id": "GM1",
-        "issue": "gsc_audit.json untracked \u2014 at risk of accidental commit",
-        "detail": "gsc_audit.json contains GSC performance data and is 226KB. Not in .gitignore.",
-        "fix": "Add gsc_audit.json to .gitignore"
-      },
-      {
-        "id": "GM2",
-        "issue": "homepage_body.html untracked \u2014 at risk of accidental commit",
-        "detail": "64KB untracked working file at project root. Not in .gitignore.",
-        "fix": "Confirm purpose then delete or add to .gitignore"
-      },
-      {
-        "id": "GM3",
-        "issue": "live_backup/ untracked \u2014 at risk of accidental commit",
-        "detail": "live_backup/ directory with 83 files is untracked and not in .gitignore.",
-        "fix": "Add live_backup/ to .gitignore"
-      },
-      {
-        "id": "GM4",
-        "issue": "assets/css/ untracked \u2014 main.css dead file at risk of accidental commit",
-        "detail": "assets/css/main.css is 321KB, never linked in base.html, never deployed to live server. Decision needed.",
-        "fix": "Delete assets/css/main.css and assets/css/ directory entirely"
-      }
-    ],
-    "low": [
-      {
-        "id": "S1",
-        "issue": "Zone.Identifier junk files in assets/images/ on live server",
-        "detail": "Four .webp:Zone.Identifier Windows metadata files present in httpdocs/assets/images/ on live server.",
-        "fix": "ssh -i ~/.ssh/github_actions_bat root@217.154.33.12 \"find /var/www/vhosts/clearances-in-devon.co.uk/httpdocs/assets/ -name \"*:Zone.Identifier\" -delete\""
-      }
-    ],
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [],
     "closed": [
       {
         "id": "H1",
@@ -1031,6 +957,76 @@
         "detail": "With 2962 similar service-location pages Google may see duplicate content risk. No <link rel=\"canonical\"> in base.html.",
         "fix": "Add {{ canonical_url }} token to base.html and inject per-page canonical URL in build.py",
         "resolution": "CLOSED \u2014 canonical URL token added to base.html, injected per-page in build.py."
+      },
+      {
+        "id": "HOMEPAGE-GALLERY",
+        "issue": "Before and After section on homepage and all 2962 service-location pages",
+        "resolution": "CLOSED \u2014 replaced with OUR CLEARANCE WORK section across all 2962 pages. Single image left, green info box and navy info box right, 18+ Years Experience. Bulk regex replace via pages.json."
+      },
+      {
+        "id": "C1",
+        "issue": "key.json not in .gitignore",
+        "resolution": "CLOSED \u2014 key.json added to .gitignore 2026-06-14."
+      },
+      {
+        "id": "GC1",
+        "issue": "key.json not in .gitignore \u2014 one accidental git add . pushes it to GitHub",
+        "resolution": "CLOSED \u2014 key.json added to .gitignore 2026-06-14."
+      },
+      {
+        "id": "H3",
+        "issue": "Call badge contains false van tracking claim",
+        "resolution": "CLOSED \u2014 van tracking text removed from base.html, replaced with simple call-to-action 2026-06-14."
+      },
+      {
+        "id": "GH1",
+        "issue": "Master_Report.json modified locally but not committed",
+        "resolution": "CLOSED \u2014 committed 2026-06-14."
+      },
+      {
+        "id": "M2",
+        "issue": "index.html at project root is 0 bytes",
+        "resolution": "CLOSED \u2014 deleted 2026-06-14."
+      },
+      {
+        "id": "M3",
+        "issue": "homepage_body.html at project root is 64KB \u2014 purpose unclear",
+        "resolution": "CLOSED \u2014 deleted 2026-06-14."
+      },
+      {
+        "id": "M4",
+        "issue": "Zone.Identifier junk file at project root",
+        "resolution": "CLOSED \u2014 deleted 2026-06-14."
+      },
+      {
+        "id": "M5",
+        "issue": "No Open Graph tags",
+        "resolution": "CLOSED \u2014 OG tags added to base.html 2026-06-14."
+      },
+      {
+        "id": "GM1",
+        "issue": "gsc_audit.json untracked \u2014 at risk of accidental commit",
+        "resolution": "CLOSED \u2014 added to .gitignore 2026-06-14."
+      },
+      {
+        "id": "GM2",
+        "issue": "homepage_body.html untracked \u2014 at risk of accidental commit",
+        "resolution": "CLOSED \u2014 deleted and added to .gitignore 2026-06-14."
+      },
+      {
+        "id": "GM3",
+        "issue": "live_backup/ untracked \u2014 at risk of accidental commit",
+        "resolution": "CLOSED \u2014 added to .gitignore 2026-06-14."
+      },
+      {
+        "id": "GM4",
+        "issue": "assets/css/ untracked \u2014 main.css dead file at risk of accidental commit",
+        "resolution": "CLOSED \u2014 added to .gitignore 2026-06-14."
+      },
+      {
+        "id": "S1",
+        "issue": "Zone.Identifier junk files in assets/images/ on live server",
+        "resolution": "CLOSED \u2014 deleted from live server via SSH 2026-06-14."
       }
     ]
   },
